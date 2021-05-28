@@ -9,22 +9,28 @@ import MODULES from './modules';
 import { AuthModule } from './security/auth/auth.module';
 import { JwtAuthGuard } from './security/auth/jwt-auth.guard';
 
+const getTypeormCofng = (): any => process.env.NODE_ENV == 'production' ? {
+  url: process.env.CLEARDB_DATABASE_URL,
+} : {
+  host:  process.env.DATABASE_HOST,
+  port: Number(process.env.DATABASE_PORT),
+  username:  process.env.DATABASE_USERNAME,
+  password:  process.env.DATABASE_PASSWORD,
+}
 @Module({
   imports: [
-    ...MODULES,
-    AuthModule,
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host:  process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username:  process.env.DATABASE_USERNAME,
-      password:  process.env.DATABASE_PASSWORD,
-      database:  process.env.DATABASE_DATABASE,
-      entities: ENTITITES,
-      synchronize: process.env.NODE_ENV !== 'production',
-      timezone: 'Z'
-    })
+    TypeOrmModule.forRootAsync({
+      useFactory: () => Object.assign(getTypeormCofng(), {
+        type: 'mysql',
+        timezone: 'Z',
+        entities: ENTITITES,
+        synchronize: process.env.NODE_ENV !== 'production',
+        database: process.env.DATABASE_DATABASE,
+      })
+    }),
+    AuthModule,
+    ...MODULES,
   ],
   controllers: [AppController],
   providers: [
