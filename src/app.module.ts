@@ -25,7 +25,7 @@ const getTypeormCofng = (): any => process.env.NODE_ENV == 'production' ? {
         type: 'mysql',
         timezone: 'Z',
         entities: ENTITITES,
-        synchronize: process.env.NODE_ENV !== 'production',
+        synchronize: true,
         database: process.env.DATABASE_DATABASE,
       })
     }),
