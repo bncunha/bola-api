@@ -112,7 +112,8 @@ export class BoloesService {
   }
 
   async getPartidasAtivas(idBolao: number, idUsuario: number) {
-    const mais30 = DateUtils.add(new Date, {minutes: 30});
+    const mais30 = DateUtils.add(new Date(), {minutes: 30});
+    console.log(mais30)
     const bolao = await this.bolaoRepository.findOne(idBolao, {relations: ['campeonato']})
     const idCampeonato = bolao.campeonato.id;
 
@@ -122,9 +123,8 @@ export class BoloesService {
     .leftJoin('partida.campeonato', 'campeonato')
     .where('campeonato.id = :idCampeonato', { idCampeonato })
     .andWhere('partida.isFinalizado = :isFinalizado', {isFinalizado: false})
-    .andWhere('partida.data > :data', { data: DateUtils.formatSql(mais30) })
+    .andWhere('partida.data > :data', { data: mais30 })
     .getMany();
-
     const usuario = await this.usuarioService.findOne(idUsuario);
     const participacao = await this.participacaoService.findByBolaoAndUsuario(bolao, usuario, {relations: ['palpites', 'palpites.partida']});
 

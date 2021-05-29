@@ -1,4 +1,5 @@
 import { compareAsc, sub, add, differenceInDays, format } from 'date-fns';
+import ja from 'date-fns/locale/ja/index';
 
 export class DateUtils {
 

@@ -31,7 +31,7 @@ export class Bolao {
   senha: string;
 
   @Column({
-    default: DateUtils.formatSql(new Date())
+    default: new Date()
   })
   dataInicio: Date;
 

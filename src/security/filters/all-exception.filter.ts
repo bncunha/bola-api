@@ -7,11 +7,11 @@ export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
-    const json = typeof exception.getResponse() === 'string' ? exception.getResponse() : {
+    const status = exception.getStatus ? exception.getStatus() : 400;
+
+    const json = exception.getResponse ? exception.getResponse() : {
       statusCode: status || 400,
-      message: (exception.getResponse() as any).message || 'Erro interno no servidor!'
+      message: (exception.getResponse && (exception.getResponse() as any).message) || 'Erro interno no servidor!'
     }
     response
       .status(status || 400)
