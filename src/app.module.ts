@@ -9,8 +9,8 @@ import MODULES from './modules';
 import { AuthModule } from './security/auth/auth.module';
 import { JwtAuthGuard } from './security/auth/jwt-auth.guard';
 
-const getTypeormCofng = (): any => process.env.NODE_ENV !== 'production' ? {
-  url: 'mysql://b61618e12d1619:3e84f29d@us-cdbr-east-04.cleardb.com/heroku_35bf6c6cdf0151c?reconnect=true',
+const getTypeormCofng = (): any => process.env.NODE_ENV == 'production' ? {
+  url: process.env.CLEARDB_DATABASE_URL,
 } : {
   host:  process.env.DATABASE_HOST,
   port: Number(process.env.DATABASE_PORT),
