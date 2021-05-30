@@ -19,6 +19,7 @@ export class PartidasService {
     partidasDto.forEach(p => {
       const finded = partidas.find(p1 => p1.id == p.idPartida);
       if (finded) {
+        finded.isFinalizado = true;
         finded.resultadoMandante = p.resultadoMandante;
         finded.resultadoVisitante = p.resultadoVisitante;
       }
