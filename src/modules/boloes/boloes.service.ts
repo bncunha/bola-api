@@ -122,19 +122,15 @@ export class BoloesService {
     .leftJoinAndSelect('partida.visitante', 'visitante')
     .leftJoin('partida.campeonato', 'campeonato')
     .where('campeonato.id = :idCampeonato', { idCampeonato })
-    .andWhere('partida.isFinalizado = :isFinalizado', {isFinalizado: false})
-    .andWhere('partida.data > :data', { data: mais30 })
     .getMany();
     const usuario = await this.usuarioService.findOne(idUsuario);
     const participacao = await this.participacaoService.findByBolaoAndUsuario(bolao, usuario, {relations: ['palpites', 'palpites.partida']});
 
     if (partidas.length) {
-      const rodadaAtual = partidas[0].rodada;
       partidas.sort((a, b) => DateUtils.compare(a.data, b.data));
       partidas.forEach((p) => {
         p.palpites = participacao[0].palpites.filter(palpite => palpite.partida.id == p.id);
       })
-      partidas = partidas.filter(p => DateUtils.difference(new Date(p.data), new Date()) <= 7 && p.rodada == rodadaAtual);
     }
     return partidas;
   }
