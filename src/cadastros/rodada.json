@@ -63,6 +63,186 @@
             "mandante": "Internacional",
             "visitante": "Sport",
             "rodada": 1
+        },
+        {
+            "data": "06/05/2021 22:00",
+            "mandante": "Santos",
+            "visitante": "Ceará",
+            "rodada": 2
+        },
+        {
+            "data": "06/05/2021 22:00",
+            "mandante": "Atlético-GO",
+            "visitante": "São Paulo",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 00:00",
+            "mandante": "Bragantino",
+            "visitante": "Bahia",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 14:00",
+            "mandante": "Grêmio",
+            "visitante": "Flamengo",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 14:00",
+            "mandante": "Fluminense",
+            "visitante": "Cuiabá Esporte",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 19:00",
+            "mandante": "América-MG",
+            "visitante": "Corinthians",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 19:00",
+            "mandante": "Fortaleza",
+            "visitante": "Internacional",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 21:15",
+            "mandante": "Juventude",
+            "visitante": "Athletico-PR",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 21:15",
+            "mandante": "Palmeiras",
+            "visitante": "Chapecoense",
+            "rodada": 2
+        },
+        {
+            "data": "06/06/2021 23:30",
+            "mandante": "Sport",
+            "visitante": "Atlético-MG",
+            "rodada": 2
+        },
+        {
+            "data": "06/12/2021 22:00",
+            "mandante": "Santos",
+            "visitante": "Juventude",
+            "rodada": 3
+        },
+        {
+            "data": "06/12/2021 22:00",
+            "mandante": "Palmeiras",
+            "visitante": "Corinthians",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 19:00",
+            "mandante": "Atlético-MG",
+            "visitante": "São Paulo",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 19:00",
+            "mandante": "Grêmio",
+            "visitante": "Athletico-PR",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 19:00",
+            "mandante": "Bragantino",
+            "visitante": "Fluminense",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 21:15",
+            "mandante": "Bahia",
+            "visitante": "Internacional",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 21:15",
+            "mandante": "Fortaleza",
+            "visitante": "Sport",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 23:30",
+            "mandante": "Flamengo",
+            "visitante": "América-MG",
+            "rodada": 3
+        },
+        {
+            "data": "06/13/2021 23:30",
+            "mandante": "Chapecoense",
+            "visitante": "Ceará",
+            "rodada": 3
+        },
+        {
+            "data": "06/14/2021 23:00",
+            "mandante": "Cuiabá Esporte",
+            "visitante": "Atlético-GO",
+            "rodada": 3
+        },
+        {
+            "data": "06/16/2021 22:00",
+            "mandante": "Internacional",
+            "visitante": "Atlético-MG",
+            "rodada": 4
+        },
+        {
+            "data": "06/16/2021 22:00",
+            "mandante": "São Paulo",
+            "visitante": "Chapecoense",
+            "rodada": 4
+        },
+        {
+            "data": "06/16/2021 23:30",
+            "mandante": "Corinthians",
+            "visitante": "Bragantino",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 00:30",
+            "mandante": "Juventude",
+            "visitante": "Palmeiras",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 14:00",
+            "mandante": "Athletico-PR",
+            "visitante": "Flamengo",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 19:00",
+            "mandante": "América-MG",
+            "visitante": "Cuiabá Esporte",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 22:00",
+            "mandante": "Ceará",
+            "visitante": "Bahia",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 22:00",
+            "mandante": "Atlético-GO",
+            "visitante": "Fortaleza",
+            "rodada": 4
+        },
+        {
+            "data": "06/17/2021 22:00",
+            "mandante": "Fluminense",
+            "visitante": "Santos",
+            "rodada": 4
+        },
+        {
+            "data": "06/18/2021 00:00",
+            "mandante": "Sport",
+            "visitante": "Grêmio",
+            "rodada": 4
         }
     ]
   }
