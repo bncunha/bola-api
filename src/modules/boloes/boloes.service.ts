@@ -9,7 +9,7 @@ import { Usuario } from 'src/models/Usuario';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
 import { Encrypt } from 'src/utils/encrypt.util';
-import { Brackets, IsNull, Repository } from 'typeorm';
+import { Brackets, IsNull, LessThan, Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
@@ -137,26 +137,19 @@ export class BoloesService {
       partidas = partidas.filter(p => DateUtils.difference(new Date(p.data), new Date()) <= 7 && p.rodada == rodadaAtual);
     }
     return partidas;
+  }
 
-    // const bolao = await this.bolaoRepository.createQueryBuilder("bolao")
-    // .leftJoinAndSelect("bolao.campeonato", "campeonato")
-    // .leftJoinAndSelect("campeonato.partidas", "partida")
-    // .leftJoinAndSelect("partida.palpites", "palpite")
-    // .leftJoinAndSelect("palpite.participacao", "participacao")
-    // .leftJoinAndSelect("participacao.usuario", "usuario", )
-    // .where('bolao.id = :idBolao', { idBolao })
-    // .andWhere('partida.isFinalizado = :isFinalizado', {isFinalizado: false})
-    // .andWhere('partida.data > :data', { data: DateUtils.formatSql(mais30) })
-    // .getOne();
-    // const campeonato = bolao.campeonato;
-    // if (campeonato && campeonato.partidas.length) {
-    //   const rodadaAtual = campeonato.partidas[0].rodada;
-    //   campeonato.partidas.sort((a, b) => DateUtils.compare(a.data, b.data));
-    //   campeonato.partidas.forEach((p) => {
-    //     p.palpites = p.palpites.filter(palpite => palpite.participacao.usuario.id == idUsuario);
-    //   })
-    //   campeonato.partidas = campeonato.partidas.filter(p => DateUtils.difference(new Date(p.data), new Date()) <= 7 && p.rodada == rodadaAtual);
-    // }
-    // return bolao;
+  async getHistoricoPartidas(idBolao: number) {
+    const bolao = await this.bolaoRepository.findOne(idBolao, {relations: ['campeonato']})
+    const idCampeonato = bolao.campeonato.id;
+
+    return this.partidaRepository.find({
+      relations: ['mandante', 'visitante'],
+      where: {
+        campeonato: idCampeonato, data: LessThan(new Date())
+      }, order: {
+        data: 'DESC'
+      }
+    });
   }
 }

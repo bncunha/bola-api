@@ -66,4 +66,9 @@ export class BoloesController {
     }
   }
 
+  @Get('historico-partidas/:idBolao')
+  getHistoricoPartidas(@Param('idBolao') idBolao: number) {
+    return this.boloesService.getHistoricoPartidas(idBolao);
+  }
+
 }
