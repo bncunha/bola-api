@@ -11,6 +11,7 @@ import { ParticipacoesModule } from 'src/participacoes/participacoes.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Palpite, Partida]), UsuariosModule, BoloesModule, ParticipacoesModule],
   controllers: [PalpitesController],
-  providers: [PalpitesService]
+  providers: [PalpitesService],
+  exports: [PalpitesService]
 })
 export class PalpitesModule {}
