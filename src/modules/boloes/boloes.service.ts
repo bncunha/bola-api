@@ -62,6 +62,10 @@ export class BoloesService {
 
   async getTotalPontosByParticipacao(participacao: Participacao) {
     const palpites = await this.palpiteRepository.find({where: { participacao }});
+    return this.somarTotalPontos(palpites);
+  }
+  
+  somarTotalPontos(palpites: any[]) {
     return palpites.reduce((prev, cur) => prev + (cur.pontuacao || 0) ,0)
   }
 
@@ -101,9 +105,10 @@ export class BoloesService {
     const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
     const result = await this.participacaoService.findByBolao(bolao, {relations: ['palpites', 'usuario']}) as any;
     result.forEach(r => {
-      r.soma = r.palpites.reduce((prev, b) => prev + b.pontuacao, 0)
+      r.pontuacao = this.somarTotalPontos(r.palpites);
+      delete r.palpites;
     })
-    result.sort((a, b) => b.soma - a.soma);
+    result.sort((a, b) => b.pontuacao - a.pontuacao);
     return result;
   }
 
