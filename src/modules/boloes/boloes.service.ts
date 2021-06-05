@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { Bolao } from 'src/models/Bolao';
@@ -9,10 +9,12 @@ import { Usuario } from 'src/models/Usuario';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
 import { Encrypt } from 'src/utils/encrypt.util';
-import { Brackets, IsNull, LessThan, Repository } from 'typeorm';
+import { Brackets, FindOneOptions, IsNull, LessThan, Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
+import { TimesService } from '../times/times.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
+import { CreatePalpiteBonusDto } from './dto/create-palpite-bonus.dto';
 import { UpdateBolaoDto } from './dto/update-bolao.dto';
 
 @Injectable()
@@ -24,7 +26,8 @@ export class BoloesService {
     @InjectRepository(Palpite) private palpiteRepository: Repository<Palpite>,
     private participacaoService: ParticipacoesService,
     private usuarioService: UsuariosService,
-    private campeonatoService: CampeonatosService
+    private campeonatoService: CampeonatosService,
+    private timeService: TimesService
   ) {}
 
   async create(createBoloeDto: CreateBolaoDto, usuario: number) {
@@ -69,8 +72,8 @@ export class BoloesService {
     return palpites.reduce((prev, cur) => prev + (cur.pontuacao || 0) ,0)
   }
 
-  findOne(id: number) {
-    return this.bolaoRepository.findOneOrFail(id);
+  findOne(id: number, options?: FindOneOptions) {
+    return this.bolaoRepository.findOneOrFail(id, options);
   }
 
   async update(id: number, updateBoloeDto: UpdateBolaoDto) {
@@ -152,5 +155,25 @@ export class BoloesService {
         data: 'DESC'
       }
     });
+  }
+
+  async salvarPalpiteBonus(idBolao: number, createPalpiteBonusDto: CreatePalpiteBonusDto, idUsuario: number) {
+    const times = await this.timeService.findByIds([createPalpiteBonusDto.idCampeao, createPalpiteBonusDto.idViceCampeao]);
+    if (createPalpiteBonusDto.idCampeao == createPalpiteBonusDto.idViceCampeao) {
+      throw new ConflictException('Time campeão deve ser diferente do vice-campeão!')
+    }
+    
+    if (times.length < 2) {
+      throw new NotFoundException('Time não encontrado!');
+    }
+
+    const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
+    const usuario = await this.usuarioService.findOne(idUsuario);
+    const participacao = await this.participacaoService.findByBolaoAndUsuario(bolao, usuario);
+    const timeCampeao = await this.timeService.findByIds([createPalpiteBonusDto.idCampeao]);
+    const timeVice = await this.timeService.findByIds([createPalpiteBonusDto.idViceCampeao]);
+    participacao[0].palpiteCampeao = timeCampeao[0];
+    participacao[0].palpiteViceCampeao = timeVice[0];
+    return this.participacaoService.save(participacao[0]);
   }
 }

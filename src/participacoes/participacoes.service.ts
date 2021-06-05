@@ -66,6 +66,10 @@ export class ParticipacoesService {
     })
   }
 
+  save(participacao: Participacao) {
+    return this.participacaoRepository.save(participacao);
+  }
+
   findAll() {
     return `This action returns all participacoes`;
   }

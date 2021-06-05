@@ -8,7 +8,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus ? exception.getStatus() : 400;
-
+    console.log(exception)
     const json = exception.getResponse ? exception.getResponse() : {
       statusCode: status || 400,
       message: (exception.getResponse && (exception.getResponse() as any).message) || 'Erro interno no servidor!'

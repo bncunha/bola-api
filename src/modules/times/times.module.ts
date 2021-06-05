@@ -7,6 +7,7 @@ import { Time } from 'src/models/Time';
 @Module({
   imports: [TypeOrmModule.forFeature([Time])],
   controllers: [TimesController],
-  providers: [TimesService]
+  providers: [TimesService],
+  exports: [TimesService]
 })
 export class TimesModule {}

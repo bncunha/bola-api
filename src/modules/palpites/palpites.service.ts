@@ -6,8 +6,9 @@ import { Participacao } from 'src/models/Participacao';
 import { Partida } from 'src/models/Partida';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
-import { IsNull, Not, Repository } from 'typeorm';
+import { IsNull, Not, Repository, SimpleConsoleLogger } from 'typeorm';
 import { BoloesService } from '../boloes/boloes.service';
+import { PartidasService } from '../partidas/partidas.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CreatePalpiteDto } from './dto/create-palpite.dto';
 import { UpdatePalpiteDto } from './dto/update-palpite.dto';
@@ -95,5 +96,19 @@ export class PalpitesService {
     } else {
       return 'empate';
     }
+  }
+
+  async isPalpiteBonusDisponivel(idBolao: number) {
+    const bolao = await this.bolaoService.findOne(idBolao, {relations: ['campeonato']}); 
+    const partidas = await this.partidaRepository.find({
+      where: {
+        campeonato: bolao.campeonato,
+        rodada: 3
+      },
+      order: {
+        data: 'ASC'
+      }
+    });
+    return DateUtils.compare(new Date(), partidas[0].data) <= 0;
   }
 }

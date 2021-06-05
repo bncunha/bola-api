@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { Usuario } from 'src/models/Usuario';
 import { BoloesService } from './boloes.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
+import { CreatePalpiteBonusDto } from './dto/create-palpite-bonus.dto';
 import { UpdateBolaoDto } from './dto/update-bolao.dto';
 
 @Controller('boloes')
@@ -69,6 +70,11 @@ export class BoloesController {
   @Get('historico-partidas/:idBolao')
   getHistoricoPartidas(@Param('idBolao') idBolao: number) {
     return this.boloesService.getHistoricoPartidas(idBolao);
+  }
+
+  @Post('palpite-bonus/:idBolao')
+  salvarPalpiteBonus(@Param('idBolao') idBolao: number, @Body() createPalpiteBonusDto: CreatePalpiteBonusDto, @Request() req) {
+    return this.boloesService.salvarPalpiteBonus(idBolao, createPalpiteBonusDto, req.user.userId);
   }
 
 }
