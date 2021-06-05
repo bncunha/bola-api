@@ -77,4 +77,9 @@ export class BoloesController {
     return this.boloesService.salvarPalpiteBonus(idBolao, createPalpiteBonusDto, req.user.userId);
   }
 
+  @Get('palpite-bonus/:idBolao')
+  getPalpiteBonus(@Param('idBolao') idBolao: number,@Request() req) {
+    return this.boloesService.getPalpiteBonus(idBolao, req.user.userId);
+  }
+
 }

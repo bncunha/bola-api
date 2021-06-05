@@ -176,4 +176,15 @@ export class BoloesService {
     participacao[0].palpiteViceCampeao = timeVice[0];
     return this.participacaoService.save(participacao[0]);
   }
+
+  async getPalpiteBonus(idBolao: number, idUsuario: number) {
+    const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
+    const usuario = await this.usuarioService.findOne(idUsuario);
+    const participacao = await this.participacaoService.findByBolaoAndUsuario(bolao, usuario, {relations: ['palpiteCampeao', 'palpiteViceCampeao']});
+    console.log(participacao);
+    return {
+      palpiteCampeao: participacao[0].palpiteCampeao ? participacao[0].palpiteCampeao?.id : null,
+      palpiteViceCampeao: participacao[0].palpiteViceCampeao ? participacao[0].palpiteViceCampeao?.id : null,
+    }
+  }
 }
