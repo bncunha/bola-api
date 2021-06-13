@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { TimesService } from './times.service';
 import { CreateTimeDto } from './dto/create-time.dto';
 
@@ -10,4 +10,10 @@ export class TimesController {
   create(@Body() createTimeDto: CreateTimeDto) {
     return this.timesService.create(createTimeDto);
   }
+
+  @Get()
+  getTimesPorBolao() {
+    return this.timesService.findAll();
+  }
+
 }

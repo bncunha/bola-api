@@ -8,13 +8,15 @@ import { UsuariosModule } from '../usuarios/usuarios.module';
 import { Partida } from 'src/models/Partida';
 import { Palpite } from 'src/models/Palpite';
 import { CampeonatosModule } from '../campeonatos/campeonatos.module';
+import { TimesModule } from '../times/times.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Bolao, Partida, Palpite]),
     ParticipacoesModule,
     UsuariosModule,
-    CampeonatosModule
+    CampeonatosModule,
+    TimesModule
   ],
   controllers: [BoloesController],
   providers: [BoloesService],

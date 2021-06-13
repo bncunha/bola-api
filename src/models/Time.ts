@@ -10,4 +10,11 @@ export class Time {
     nullable: false
   })
   nome: string;
+
+  @Column({
+    name: 'logomarca',
+    unique: true,
+    nullable: true
+  })
+  logomarca: string;
 }

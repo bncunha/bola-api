@@ -3,7 +3,6 @@ import { PartidasService } from './partidas.service';
 import { PartidasController } from './partidas.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Partida } from 'src/models/Partida';
-import { PalpitesService } from '../palpites/palpites.service';
 import { PalpitesModule } from '../palpites/palpites.module';
 
 @Module({

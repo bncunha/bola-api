@@ -16,4 +16,9 @@ export class PalpitesController {
   pontuarApostas(@Param('idPartida') idPartida: number) {
     return this.palpitesService.pontuarPalpites(idPartida);
   }
+
+  @Get('bonus/disponibilidade/:idBolao')
+  getDataLimite(@Param('idBolao') idBolao: number) {
+    return this.palpitesService.isPalpiteBonusDisponivel(idBolao);
+  }
 }

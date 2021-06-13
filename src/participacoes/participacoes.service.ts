@@ -26,7 +26,8 @@ export class ParticipacoesService {
   }
 
   async participarBolao(bolao: Bolao, usuario: Usuario) {
-    if (await (await this.findByUsuario(usuario)).length) {
+    const bolaoUsuarioFinded = await this.findByBolaoAndUsuario(bolao, usuario);
+    if (bolaoUsuarioFinded.length) {
       throw new ConflictException('Esse usuário já está participando deste bolão!')
     }
     const participacao = await this.createParticipacaoByUsuario(usuario, false);
@@ -63,6 +64,10 @@ export class ParticipacoesService {
       },
       ...options
     })
+  }
+
+  save(participacao: Participacao) {
+    return this.participacaoRepository.save(participacao);
   }
 
   findAll() {
