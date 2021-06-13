@@ -187,4 +187,23 @@ export class BoloesService {
       palpiteViceCampeao: participacao[0].palpiteViceCampeao ? participacao[0].palpiteViceCampeao?.id : null,
     }
   }
+
+  async getDetalhesPartida(idBolao: number, idPartida: number) {
+    const mais30 = DateUtils.add(new Date(), {minutes: 30});
+    const bolao = await this.bolaoRepository.findOneOrFail(idBolao); 
+    const partida = await this.partidaRepository.findOneOrFail(idPartida, {relations: ['mandante', 'visitante']});
+    const palpites = await this.palpiteRepository.createQueryBuilder('palpite')
+      .leftJoin('palpite.partida', 'part')
+      .leftJoinAndSelect('palpite.participacao', 'p')
+      .leftJoinAndSelect('p.usuario', 'u')
+      .leftJoinAndSelect('p.bolao', 'b')
+      .where('part.id = :idPartida', {idPartida})
+      .andWhere('part.data < :mais30', {mais30})
+      .andWhere('b.id = :idBolao', {idBolao: bolao.id})
+      .getMany();
+    return {
+      partida,
+      palpites
+    }
+  }
 }
