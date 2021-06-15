@@ -47,6 +47,7 @@ export class PalpitesService {
       palpite.partida = partida;
       toSave.push(palpite);
     }
+    console.log('-- Salvando Palpite --', toSave);
     return this.palpiteRepository.save(toSave);
   }
 

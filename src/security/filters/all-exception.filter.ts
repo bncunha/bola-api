@@ -13,6 +13,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       statusCode: status || 400,
       message: (exception.getResponse && (exception.getResponse() as any).message) || 'Erro interno no servidor!'
     }
+    console.log(json);
     response
       .status(status || 400)
       .json(json);
