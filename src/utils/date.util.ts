@@ -22,4 +22,8 @@ export class DateUtils {
   static formatSql(date: Date) {
     return format(date, 'yyyy-MM-dd HH:mm:ss');
   }
+
+  static format(date: Date, fomat: string) {
+    return format(date, fomat);
+  }
 }

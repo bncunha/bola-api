@@ -1,0 +1,67 @@
+{
+    "campeonato": "Campeonato Brasileiro 2021",
+    "dataInicio": "05/29/2021",
+    "dataFim": "12/05/2021",
+    "partidas": [
+        {
+            "data": "07/03/2021 22:00",
+            "mandante": "Athletico-PR",
+            "visitante": "Fortaleza",
+            "rodada": 9
+        },
+        {
+            "data": "07/03/2021 22:00",
+            "mandante": "América-MG",
+            "visitante": "Santos",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 00:00",
+            "mandante": "Corinthians",
+            "visitante": "Internacional",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 14:00",
+            "mandante": "Chapecoense",
+            "visitante": "Bahia",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 19:00",
+            "mandante": "Flamengo",
+            "visitante": "Fluminense",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 19:00",
+            "mandante": "Sport",
+            "visitante": "Palmeiras",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 21:15",
+            "mandante": "Ceará",
+            "visitante": "Juventude",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 21:15",
+            "mandante": "São Paulo",
+            "visitante": "Bragantino",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 21:15",
+            "mandante": "Cuiabá Esporte",
+            "visitante": "Atlético-MG",
+            "rodada": 9
+        },
+        {
+            "data": "07/04/2021 23:15",
+            "mandante": "Grêmio",
+            "visitante": "Atlético-GO",
+            "rodada": 9
+        }
+    ]
+  }

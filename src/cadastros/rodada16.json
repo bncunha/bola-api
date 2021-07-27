@@ -1,0 +1,67 @@
+{
+    "campeonato": "Campeonato Brasileiro 2021",
+    "dataInicio": "05/29/2021",
+    "dataFim": "12/05/2021",
+    "partidas": [
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Internacional",
+            "visitante": "Fluminense",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Bahia",
+            "visitante": "Atlético-GO",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "São Paulo",
+            "visitante": "Grêmio",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Cuiabá Esporte",
+            "visitante": "Athletico-PR",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Flamengo",
+            "visitante": "Sport",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Chapecoense",
+            "visitante": "América-MG",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Fortaleza",
+            "visitante": "Santos",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Atlético-MG",
+            "visitante": "Palmeiras",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Corinthians",
+            "visitante": "Ceará",
+            "rodada": 16
+        },
+        {
+            "data": "08/15/2021 19:00",
+            "mandante": "Bragantino",
+            "visitante": "Juventude",
+            "rodada": 16
+        }
+    ]
+  }

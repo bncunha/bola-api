@@ -1,0 +1,67 @@
+{
+    "campeonato": "Campeonato Brasileiro 2021",
+    "dataInicio": "05/29/2021",
+    "dataFim": "12/05/2021",
+    "partidas": [
+        {
+            "data": "07/17/2021 20:00",
+            "mandante": "Ceará",
+            "visitante": "Athletico-PR",
+            "rodada": 12
+        },
+        {
+            "data": "07/17/2021 20:00",
+            "mandante": "São Paulo",
+            "visitante": "Fortaleza",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 00:00",
+            "mandante": "Fluminense",
+            "visitante": "Grêmio",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 14:00",
+            "mandante": "Chapecoense",
+            "visitante": "Cuiabá Esporte",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 19:00",
+            "mandante": "Atlético-GO",
+            "visitante": "Palmeiras",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 21:15",
+            "mandante": "Bahia",
+            "visitante": "Flamengo",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 23:30",
+            "mandante": "Internacional",
+            "visitante": "Juventude",
+            "rodada": 12
+        },
+        {
+            "data": "07/18/2021 23:30",
+            "mandante": "Bragantino",
+            "visitante": "Santos",
+            "rodada": 12
+        },
+        {
+            "data": "07/19/2021 23:00",
+            "mandante": "América-MG",
+            "visitante": "Sport",
+            "rodada": 12
+        },
+        {
+            "data": "07/17/2021 22:00",
+            "mandante": "Corinthians",
+            "visitante": "Atlético-MG",
+            "rodada": 12
+        }
+    ]
+  }
