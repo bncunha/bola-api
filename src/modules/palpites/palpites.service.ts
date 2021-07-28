@@ -51,6 +51,11 @@ export class PalpitesService {
     return this.palpiteRepository.save(toSave);
   }
 
+  async pontuarMany(idPartidas: number[]) {
+    const requests = idPartidas.map(id => this.pontuarPalpites(id));
+    return Promise.all(requests);
+  }
+
   async pontuarPalpites(idPartida: number) {
     const partida = await this.partidaRepository.findOneOrFail(idPartida);
     const palpites = await this.palpiteRepository.find({where: { partida }});

@@ -4,6 +4,7 @@ import { ApiFootball } from './api-football';
 
 @Module({
   imports: [HttpModule],
-  providers: [ApiFootball]
+  providers: [ApiFootball],
+  exports: [ApiFootball]
 })
 export class ApiFootballModule {}

@@ -11,9 +11,9 @@ export class ApiFootballFixtureParse {
       const partida = new Partida();
       const mandante = new Time();
       const visitante = new Time();
-      mandante.nome = s.teams.home.name;
+      mandante.nome = this.parseName(s.teams.home.name);
       mandante.logomarca = s.teams.home.logo;
-      visitante.nome = s.teams.away.name;
+      visitante.nome = this.parseName(s.teams.away.name);
       visitante.logomarca = s.teams.away.logo;
 
       partida.data = s.fixture.date;
@@ -27,5 +27,23 @@ export class ApiFootballFixtureParse {
       partidas.push(partida);
     }
     return partidas;
+  }
+
+  parseName(nome: string) {
+    switch(nome) {
+      case 'Atletico Goianiense': return 'Atlético-GO';
+      case 'Sao Paulo': return 'São Paulo';
+      case 'Fortaleza EC': return 'Fortaleza';
+      case 'Atletico-MG': return 'Atlético-MG';
+      case 'Sport Recife': return 'Sport';
+      case 'Ceara': return 'Ceará';
+      case 'Gremio': return 'Grêmio';
+      case 'Atletico Paranaense': return 'Athletico-PR';
+      case 'America Mineiro': return 'América-MG';
+      case 'Chapecoense-sc': return 'Chapecoense';
+      case 'RB Bragantino': return 'Bragantino';
+      case 'Cuiaba': return 'Cuiabá Esporte';
+      default: return nome;
+    }
   }
 }

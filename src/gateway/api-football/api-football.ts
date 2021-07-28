@@ -10,7 +10,9 @@ import { ApiFootballResponse } from './responses/ApiFootballResponse';
 @Injectable()
 export class ApiFootball {
   private endpoint = process.env.API_FUTEBOL_ENDPOINT;
-  private key = process.env.API_FUTEBOL_KEY;
+  private headers = {
+    'x-rapidapi-key': process.env.API_FUTEBOL_KEY
+  }
 
   constructor(private httpService: HttpService) {}
 
@@ -20,18 +22,18 @@ export class ApiFootball {
       name: 'Serie A',
       current: true
     }
-    const response = await this.httpService.get<ApiFootballResponse<ApiFootballLeagueResponse>>(this.endpoint + '/leagues', {params}).toPromise();
+    const response = await this.httpService.get<ApiFootballResponse<ApiFootballLeagueResponse>>(this.endpoint + '/leagues', {params, headers: this.headers}).toPromise();
     const parser = new ApiFootballLeagueParse();
-    return parser.parse(response.data.response);
+    return parser.parse(response.data.response[0]);
   }
 
-  async getPartidas(idLeague: number, temporada: number, from: Date) {
+  async getPartidas(idLeague: number, temporada: number, from?: Date) {
     const params = {
       league: idLeague,
       season: temporada,
-      from: DateUtils.format(from, 'yyyy-MM-dd')
+      from: from ? DateUtils.format(from, 'yyyy-MM-dd') : null
     }
-    const response = await this.httpService.get<ApiFootballResponse<ApiFootballFixtureResponse[]>>(this.endpoint + '/fixtures', {params}).toPromise();
+    const response = await this.httpService.get<ApiFootballResponse<ApiFootballFixtureResponse[]>>(this.endpoint + 'fixtures', {params, headers: this.headers}).toPromise();
     const parser = new ApiFootballFixtureParse();
     return parser.parse(response.data.response);
   }

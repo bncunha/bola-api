@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Campeonato } from 'src/models/Campeonato';
-import { Brackets, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CriarCampeonatoDto } from './dto/criar-campeonato.dto';
 import { DateUtils } from '../../utils/date.util';
 import { Partida } from 'src/models/Partida';
 import { Time } from 'src/models/Time';
+import { ApiFootball } from 'src/gateway/api-football/api-football';
 
 @Injectable()
 export class CampeonatosService {
@@ -14,6 +15,7 @@ export class CampeonatosService {
     @InjectRepository(Campeonato) private campeonatoRepository: Repository<Campeonato>,
     @InjectRepository(Partida) private partidaRepository: Repository<Partida>,
     @InjectRepository(Time) private timeRepository: Repository<Time>,
+    private apiFootball: ApiFootball
   ) {}
 
   async criarCampeonatoCompleto(criarCampeonato: CriarCampeonatoDto) {
@@ -41,6 +43,30 @@ export class CampeonatosService {
 
   findByNome(nome: string) {
     return this.campeonatoRepository.findOne({where: {nome}})
+  }
+
+  async atualizarCampeonato() {
+    const campeonato = await this.apiFootball.getCampeonatoAtivo();
+    const partidasApi = await this.apiFootball.getPartidas(campeonato.idApiFootball, new Date().getFullYear());
+    const partidasCadastradas = await this.partidaRepository.find({relations: ['visitante', 'mandante']});
+    const times = await this.timeRepository.find();
+    const idPartidasPontuar = [];
+    for (let p of partidasApi) {
+      const idPartidaCadastrada = partidasCadastradas.find(pCadastrado => pCadastrado.isEqual(p));
+      const idMandante = times.find(t => t.nome.indexOf(p.mandante.nome) >= 0);
+      const idVisitante = times.find(t => t.nome.indexOf(p.visitante.nome) >= 0);
+
+      p.mandante.id = idMandante.id;
+      p.visitante.id = idVisitante.id;
+      if (idPartidaCadastrada) {
+        p.id = idPartidaCadastrada.id;
+        if (p.isFinalizado && !idPartidaCadastrada.isFinalizado) {
+          idPartidasPontuar.push(p.id);
+        }
+      }
+    }
+    const salvos = await this.partidaRepository.save(partidasApi);
+    return salvos;
   }
 
 }
