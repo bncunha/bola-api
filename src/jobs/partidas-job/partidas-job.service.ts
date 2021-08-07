@@ -11,7 +11,7 @@ export class PartidasJobService {
 
   }
 
-  @Cron('30 * * * * *')
+  @Cron('0 10 * * * *')
   // @Interval(5000)
   async atualizarPartidasEPalpites() {
     console.log('--- Iniciando Job Atualizar Partidas e Palpites ---');
