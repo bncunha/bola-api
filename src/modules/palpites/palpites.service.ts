@@ -6,7 +6,7 @@ import { Participacao } from 'src/models/Participacao';
 import { Partida } from 'src/models/Partida';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
-import { IsNull, Not, Repository, SimpleConsoleLogger } from 'typeorm';
+import { IsNull, LessThanOrEqual, Not, Repository, SimpleConsoleLogger } from 'typeorm';
 import { BoloesService } from '../boloes/boloes.service';
 import { PartidasService } from '../partidas/partidas.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
@@ -51,6 +51,23 @@ export class PalpitesService {
     return this.palpiteRepository.save(toSave);
   }
 
+  async pontuarUltimosXRodadas(x: number) {
+    const dataAtual = new Date();
+    const partidasAntigas = await this.partidaRepository.find({
+      where: {
+        data: LessThanOrEqual(dataAtual)
+      }, order: {
+        data: 'DESC'
+      }
+    });
+    const round = partidasAntigas[0]?.rodada;
+    if (round) {
+      console.log('- Atualizando Palpites, últimos 3 rounds');
+      const partidasAtualizar = partidasAntigas.filter(p => p.rodada <= round && p.rodada >= round - x);
+      await this.pontuarMany(partidasAtualizar.map(p => p.id));      
+    }
+  }
+
   async pontuarMany(idPartidas: number[]) {
     const requests = idPartidas.map(id => this.pontuarPalpites(id));
     return Promise.all(requests);
@@ -65,7 +82,7 @@ export class PalpitesService {
     const diferenca = Math.abs(resultadoMandante - resultadoVisitante);
 
     if (resultadoMandante == null || resultadoVisitante == null) {
-      throw new ConflictException('Partida não possui os resultados');
+      return new ConflictException('Partida não possui os resultados');
     }
 
     palpites.forEach(p => {
