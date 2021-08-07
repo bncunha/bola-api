@@ -9,6 +9,7 @@ export class ApiFootballLeagueParse {
     campeonato.dataInicio = new Date(source.seasons[0].start);
     campeonato.dataFim = new Date(source.seasons[0].end);
     campeonato.idApiFootball = source.league.id;
+    campeonato.ano = source.seasons[0].year;
     return campeonato;
   }
 }

@@ -120,8 +120,6 @@ export class BoloesService {
   }
 
   async getPartidasAtivas(idBolao: number, idUsuario: number) {
-    const mais30 = DateUtils.add(new Date(), {minutes: 30});
-    console.log(mais30)
     const bolao = await this.bolaoRepository.findOne(idBolao, {relations: ['campeonato']})
     const idCampeonato = bolao.campeonato.id;
 

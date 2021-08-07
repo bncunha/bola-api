@@ -20,6 +20,7 @@ export class ApiFootball {
     const params = {
       country: 'Brazil',
       name: 'Serie A',
+      season: 2021,
       current: true
     }
     const response = await this.httpService.get<ApiFootballResponse<ApiFootballLeagueResponse>>(this.endpoint + '/leagues', {params, headers: this.headers}).toPromise();

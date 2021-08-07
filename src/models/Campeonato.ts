@@ -21,11 +21,16 @@ export class Campeonato {
     nullable: false
   })
   dataFim: Date;
-
+  
   @Column({
     nullable: true
   })
   idApiFootball: number;
+
+  @Column({
+    nullable: true
+  })
+  ano: number;
 
   @ManyToOne(() => Time)
   campeao: Time;

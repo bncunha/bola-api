@@ -48,21 +48,18 @@ export class CampeonatosService {
   async atualizarCampeonato() {
     const campeonato = await this.apiFootball.getCampeonatoAtivo();
     const partidasApi = await this.apiFootball.getPartidas(campeonato.idApiFootball, new Date().getFullYear());
+    const campeonatoCadastrato = await this.campeonatoRepository.findOneOrFail({where: {idApiFootball: campeonato.idApiFootball}})
     const partidasCadastradas = await this.partidaRepository.find({relations: ['visitante', 'mandante']});
     const times = await this.timeRepository.find();
-    const idPartidasPontuar = [];
     for (let p of partidasApi) {
       const idPartidaCadastrada = partidasCadastradas.find(pCadastrado => pCadastrado.isEqual(p));
       const idMandante = times.find(t => t.nome.indexOf(p.mandante.nome) >= 0);
       const idVisitante = times.find(t => t.nome.indexOf(p.visitante.nome) >= 0);
-
+      p.campeonato = campeonatoCadastrato;
       p.mandante.id = idMandante.id;
       p.visitante.id = idVisitante.id;
       if (idPartidaCadastrada) {
         p.id = idPartidaCadastrada.id;
-        if (p.isFinalizado && !idPartidaCadastrada.isFinalizado) {
-          idPartidasPontuar.push(p.id);
-        }
       }
     }
     const salvos = await this.partidaRepository.save(partidasApi);
