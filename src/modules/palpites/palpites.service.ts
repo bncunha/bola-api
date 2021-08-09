@@ -61,9 +61,11 @@ export class PalpitesService {
       }
     });
     const round = partidasAntigas[0]?.rodada;
+    console.log('- Rodada:', round);
     if (round) {
-      console.log('- Atualizando Palpites, últimos 3 rounds');
+      console.log('- Atualizando Palpites, últimos rounds -', x);
       const partidasAtualizar = partidasAntigas.filter(p => p.rodada <= round && p.rodada >= round - x);
+      console.log(partidasAtualizar);
       await this.pontuarMany(partidasAtualizar.map(p => p.id));      
     }
   }

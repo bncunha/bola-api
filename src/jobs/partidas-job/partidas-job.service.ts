@@ -18,7 +18,7 @@ export class PartidasJobService {
     console.log('-- Atualizar Campeonato');
     await this.campeonatoService.atualizarCampeonato();
 
-    console.log('-- Atualiar Palpites, últimos 3 rounds');
+    console.log('-- Atualiar Palpites');
     await this.palpiteService.pontuarUltimosXRodadas(0);      
     console.log('--- Fim Job Atualizar Partidas e Palpites ---');
   } 
