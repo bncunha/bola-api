@@ -11,15 +11,18 @@ export class PartidasJobService {
 
   }
 
-  @Cron('0 10 * * * *')
-  // @Interval(5000)
-  async atualizarPartidasEPalpites() {
-    console.log('--- Iniciando Job Atualizar Partidas e Palpites ---');
-    console.log('-- Atualizar Campeonato');
+  @Cron('0 10 0 * * *')
+  async atualizarPartidas() {
+    console.log('--- Iniciando Job Atualizar Partidas ---');
     await this.campeonatoService.atualizarCampeonato();
-
-    console.log('-- Atualiar Palpites');
-    await this.palpiteService.pontuarUltimosXRodadas(0);      
-    console.log('--- Fim Job Atualizar Partidas e Palpites ---');
+    console.log('--- Fim Job Atualizar Partidas ---');
   } 
+
+  @Cron('0 10 * * * *')
+  async pontuarPalpites() {
+    console.log('--- Iniciando Job Atualizar Palpites ---');
+    await this.palpiteService.pontuarUltimosXRodadas(0);  
+    console.log('--- Fim Job Atualizar Palpites ---');
+  }
+
 }
