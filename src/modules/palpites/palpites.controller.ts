@@ -23,7 +23,7 @@ export class PalpitesController {
   }
 
   @Get(':idBolao')
-  getPalpitesParticipantes(@Param('idBolao') idBolao: number, @Request() req) {
-    return this.palpitesService.getPalpitesParticipantes(idBolao, req.user.userId);
+  getPalpitesParticipantes(@Param('idBolao') idBolao: number) {
+    return this.palpitesService.getPalpitesBonusParticipantes(idBolao);
   }
 }

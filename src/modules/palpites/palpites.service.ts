@@ -139,10 +139,9 @@ export class PalpitesService {
     return partidas[0] ? DateUtils.compare(new Date(), partidas[0].data) <= 0 : false;
   }
 
-  async getPalpitesParticipantes(idBolao: number, idUsuario: number) {
+  async getPalpitesBonusParticipantes(idBolao: number) {
     const bolao = await this.bolaoService.findOne(idBolao, {relations: ['campeonato']});
-    const usuario = await this.usuarioService.findOne(idUsuario);
-    return this.participacaoService.findByBolaoAndUsuario(bolao, usuario, {relations: ['usuario', 'palpiteCampeao', 'palpiteViceCampeao']});
+    return this.participacaoService.findByBolao(bolao, {relations: ['usuario', 'palpiteCampeao', 'palpiteViceCampeao']});
   };
 
   async pontuarPalpiteBonus() {
