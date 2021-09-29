@@ -136,8 +136,14 @@ export class PalpitesService {
         data: 'ASC'
       }
     });
-    return DateUtils.compare(new Date(), partidas[0].data) <= 0;
+    return partidas[0] ? DateUtils.compare(new Date(), partidas[0].data) <= 0 : false;
   }
+
+  async getPalpitesParticipantes(idBolao: number, idUsuario: number) {
+    const bolao = await this.bolaoService.findOne(idBolao, {relations: ['campeonato']});
+    const usuario = await this.usuarioService.findOne(idUsuario);
+    return this.participacaoService.findByBolaoAndUsuario(bolao, usuario, {relations: ['usuario', 'palpiteCampeao', 'palpiteViceCampeao']});
+  };
 
   async pontuarPalpiteBonus() {
     const campeonatosFinalizados = await this.campeonatoRepository.find({
