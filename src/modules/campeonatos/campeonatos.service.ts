@@ -56,6 +56,14 @@ export class CampeonatosService {
     const partidasCadastradas = await this.partidaRepository.find({relations: ['visitante', 'mandante']});
     console.log('- Buscando Times Cadastradas')
     const times = await this.timeRepository.find();
+    if (campeonato.dataFim.getTime() < new Date().getTime()) {
+      const classificacao = await this.apiFootball.getClassificacao(campeonato.idApiFootball, new Date().getFullYear());
+      const vencedor = classificacao[0].nomeTime;
+      const vice = classificacao[1].nomeTime;
+      campeonato.campeao = times.find(t => t.nome.indexOf(vencedor) >= 0);
+      campeonato.viceCampeao = times.find(t => t.nome.indexOf(vice) >= 0);
+      await this.campeonatoRepository.save(campeonato);
+    }
     for (let p of partidasApi) {
       const idPartidaCadastrada = partidasCadastradas.find(pCadastrado => pCadastrado.isEqual(p));
       const idMandante = times.find(t => t.nome.indexOf(p.mandante.nome) >= 0);

@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { Bolao } from 'src/models/Bolao';
+import { Campeonato } from 'src/models/Campeonato';
 import { Palpite } from 'src/models/Palpite';
 import { Participacao } from 'src/models/Participacao';
 import { Partida } from 'src/models/Partida';
@@ -9,7 +10,7 @@ import { Usuario } from 'src/models/Usuario';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
 import { Encrypt } from 'src/utils/encrypt.util';
-import { Brackets, FindOneOptions, IsNull, LessThan, Repository } from 'typeorm';
+import { Brackets, FindOneOptions, In, IsNull, LessThan, Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
 import { TimesService } from '../times/times.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
@@ -57,19 +58,26 @@ export class BoloesService {
 
     for (let b of  bolao) {
       for (let part of b.participantes) {
-        part.totalPontos = await this.getTotalPontosByParticipacao(part);
+        part.totalPontos = (await this.getTotalPontosByParticipacao(part));
       }
     }
     return bolao;
   }
 
+  findByCampeonato(campeonato: Campeonato[]) {
+    return this.bolaoRepository.find({where: {
+      campeonato: In(campeonato.map(c => c.id))
+    }})
+  }
+
   async getTotalPontosByParticipacao(participacao: Participacao) {
     const palpites = await this.palpiteRepository.find({where: { participacao }});
-    return this.somarTotalPontos(palpites);
+    return this.somarTotalPontos(palpites, participacao);
   }
   
-  somarTotalPontos(palpites: any[]) {
-    return palpites.reduce((prev, cur) => prev + (cur.pontuacao || 0) ,0)
+  somarTotalPontos(palpites: any[], participacao: Participacao) {
+    const somaPontos = palpites.reduce((prev, cur) => prev + (cur.pontuacao || 0) ,0)
+    return somaPontos + Number(participacao.pontosBonus || 0)
   }
 
   findOne(id: number, options?: FindOneOptions) {
@@ -108,7 +116,7 @@ export class BoloesService {
     const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
     const result = await this.participacaoService.findByBolao(bolao, {relations: ['palpites', 'usuario']}) as any;
     result.forEach(r => {
-      r.pontuacao = this.somarTotalPontos(r.palpites);
+      r.pontuacao = this.somarTotalPontos(r.palpites, r);
       delete r.palpites;
     })
     result.sort((a, b) => b.pontuacao - a.pontuacao);

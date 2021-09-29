@@ -12,4 +12,5 @@ export class ApiFootballLeagueParse {
     campeonato.ano = source.seasons[0].year;
     return campeonato;
   }
+
 }

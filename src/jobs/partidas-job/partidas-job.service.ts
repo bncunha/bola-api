@@ -25,4 +25,11 @@ export class PartidasJobService {
     console.log('--- Fim Job Atualizar Palpites ---');
   }
 
+  @Cron('0 15 * * * *')
+  async pontuarPalpiteBonus() {
+    console.log('--- Iniciando Job Pontuar Palpites Bônus ---');
+    await this.palpiteService.pontuarPalpiteBonus();  
+    console.log('--- Fim Job Pontuar Palpites Bônus ---');
+  }
+
 }

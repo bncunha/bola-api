@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { Campeonato } from 'src/models/Campeonato';
 import { Palpite } from 'src/models/Palpite';
 import { Participacao } from 'src/models/Participacao';
 import { Partida } from 'src/models/Partida';
@@ -19,6 +20,7 @@ export class PalpitesService {
   constructor(
     @InjectRepository(Palpite) private palpiteRepository: Repository<Palpite>,
     @InjectRepository(Partida) private partidaRepository: Repository<Partida>,
+    @InjectRepository(Campeonato) private campeonatoRepository: Repository<Campeonato>,
     private usuarioService: UsuariosService,
     private bolaoService: BoloesService,
     private participacaoService: ParticipacoesService
@@ -135,5 +137,30 @@ export class PalpitesService {
       }
     });
     return DateUtils.compare(new Date(), partidas[0].data) <= 0;
+  }
+
+  async pontuarPalpiteBonus() {
+    const campeonatosFinalizados = await this.campeonatoRepository.find({
+      where: {
+        campeao: Not(IsNull()),
+        viceCampeao: Not(IsNull())
+      },
+    });
+    const boloes = await this.bolaoService.findByCampeonato(campeonatosFinalizados);
+    if (campeonatosFinalizados?.length && boloes?.length) {
+      const participacoes = await this.participacaoService.findByBolao(boloes, {relations: ['palpiteCampeao', 'palpiteViceCampeao', 'bolao', 'bolao.campeonato', 'bolao.campeonato.campeao', 'bolao.campeonato.viceCampeao']});
+      participacoes.forEach(p => {
+        let acertouCampeao = 0;
+        let acertouVice = 0;
+        if (p.palpiteCampeao) {
+          acertouCampeao = p.palpiteCampeao.id == p.bolao.campeonato.campeao.id ? 50 : 0;          
+        }
+        if (p.palpiteViceCampeao) {
+          acertouVice = p.palpiteViceCampeao.id == p.bolao.campeonato.viceCampeao.id ? 30 : 0;
+        }
+        p.pontosBonus = acertouCampeao + acertouVice;        
+      });
+      await this.participacaoService.saveMany(participacoes);
+    }
   }
 }

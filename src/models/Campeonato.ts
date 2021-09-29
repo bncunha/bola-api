@@ -40,4 +40,9 @@ export class Campeonato {
 
   @OneToMany(() => Partida, p => p.campeonato, {cascade: true})
   partidas: Partida[];
+
+  atualizarVencedores(campeao: Time, vice: Time) {
+    this.campeao = campeao;
+    this.viceCampeao = vice;
+  }
 }

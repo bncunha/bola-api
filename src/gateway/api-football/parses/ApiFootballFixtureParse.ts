@@ -11,9 +11,9 @@ export class ApiFootballFixtureParse {
       const partida = new Partida();
       const mandante = new Time();
       const visitante = new Time();
-      mandante.nome = this.parseName(s.teams.home.name);
+      mandante.nome = ApiFootballFixtureParse.parseName(s.teams.home.name);
       mandante.logomarca = s.teams.home.logo;
-      visitante.nome = this.parseName(s.teams.away.name);
+      visitante.nome = ApiFootballFixtureParse.parseName(s.teams.away.name);
       visitante.logomarca = s.teams.away.logo;
 
       partida.data = s.fixture.date;
@@ -29,7 +29,7 @@ export class ApiFootballFixtureParse {
     return partidas;
   }
 
-  parseName(nome: string) {
+  static parseName(nome: string) {
     switch(nome) {
       case 'Atletico Goianiense': return 'Atlético-GO';
       case 'Sao Paulo': return 'São Paulo';
