@@ -7,6 +7,7 @@ import { DateUtils } from '../../utils/date.util';
 import { Partida } from 'src/models/Partida';
 import { Time } from 'src/models/Time';
 import { ApiFootball } from 'src/gateway/api-football/api-football';
+import { Usuario } from 'src/models/Usuario';
 
 @Injectable()
 export class CampeonatosService {
@@ -80,5 +81,18 @@ export class CampeonatosService {
     return salvos;
   }
 
+  async findById(id: number) {
+    return this.campeonatoRepository.findOne(id);
+  }
+
+  async findCampeonatosAtivosByUsuario(idUsuario: number) {
+    return await this.campeonatoRepository.createQueryBuilder('campeonato')
+      .leftJoin('campeonato.boloes', 'b')
+      .leftJoin('b.participantes', 'part')
+      .leftJoinAndSelect('part.usuario', 'u')
+      .where('u.id = :idUsuario', {idUsuario})
+      .andWhere('campeonato.ano = :ano', {ano: new Date().getFullYear()})
+      .getMany();
+  }
 }
 

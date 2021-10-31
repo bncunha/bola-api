@@ -40,14 +40,16 @@ export class ApiFootball {
 
   }
 
-  async getPartidas(idLeague: number, temporada: number, from?: Date) {
+  async getPartidas(idLeague: number, temporada: number, live?: boolean, from?: Date) {
     const params = {
       league: idLeague,
       season: temporada,
+      live: live ? 'all' : null,
       from: from ? DateUtils.format(from, 'yyyy-MM-dd') : null
     }
     const response = await this.httpService.get<ApiFootballResponse<ApiFootballFixtureResponse[]>>(this.endpoint + 'fixtures', {params, headers: this.headers}).toPromise();
     const parser = new ApiFootballFixtureParse();
     return parser.parse(response.data.response);
   }
+
 }
