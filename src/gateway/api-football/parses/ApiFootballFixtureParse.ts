@@ -20,6 +20,8 @@ export class ApiFootballFixtureParse {
       partida.mandante = mandante;
       partida.visitante = visitante;
       partida.isFinalizado = s.fixture.status.short == 'FT';
+      partida.status = ApiFootballFixtureParse.parseStatus(s.fixture.status.short);
+      partida.tempoDecorrido = s.fixture.status.elapsed;
       partida.rodada = Number(s.league.round.split('-')[1].trim());
       partida.estadio = s.fixture.venue.name;
       partida.resultadoMandante = s.goals.home;
@@ -44,6 +46,26 @@ export class ApiFootballFixtureParse {
       case 'RB Bragantino': return 'Bragantino';
       case 'Cuiaba': return 'Cuiabá Esporte';
       default: return nome;
+    }
+  }
+
+  static parseStatus(status: string) {
+    switch(status) {
+      case 'TBD': return 'Data a ser definidia';
+      case 'NS': return 'Não iniciado';
+      case '1H': return '1º tempo';
+      case 'HT': return 'Intervalo';
+      case '2H': return '2º tempo';
+      case 'ET': return 'Prorrogação';
+      case 'P': return 'Penalts';
+      case 'FT': return 'Finalizado';
+      case 'AET': return 'Finalizado com prorrogação';
+      case 'PEN': return 'Finalizado com penalts';
+      case 'SUSP': return 'Suspenso';
+      case 'INT': return 'Interrompido';
+      case 'PST': return 'Adiado';
+      case 'CANC': return 'Cancelado';
+      default: return status;
     }
   }
 }

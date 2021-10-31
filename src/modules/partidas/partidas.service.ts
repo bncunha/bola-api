@@ -38,10 +38,17 @@ export class PartidasService {
   async buscarAoVivo(idUsuario: number, campeonato?: number) {
     if (campeonato) {
       const c = await this.campeonatoService.findById(campeonato);
-      return this.apiFootball.getPartidas(c.idApiFootball, c.ano, true);
+      return {
+        campeonato: c,
+        partidas: this.apiFootball.getPartidas(c.idApiFootball, c.ano, true)
+      }
     }
     const campeonatosUsuario = await this.campeonatoService.findCampeonatosAtivosByUsuario(idUsuario);
     const requests = campeonatosUsuario.map(c => this.apiFootball.getPartidas(c.idApiFootball, c.ano, true));
-    return await Promise.all(requests);
+    const response = await Promise.all(requests);
+    return response.map((r, index) => ({
+      campeonato: campeonatosUsuario[index],
+      partidas: r
+    }))
   }
 }

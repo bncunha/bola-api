@@ -49,6 +49,10 @@ export class Partida {
   @ManyToOne(() => Campeonato, c => c.partidas)
   campeonato: Campeonato;
 
+  status: string;
+  
+  tempoDecorrido: number;
+
   isEqual(partida: Partida) {
     return this.mandante.nome == partida.mandante.nome &&
       this.visitante.nome == partida.visitante.nome &&
