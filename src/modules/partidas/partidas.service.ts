@@ -43,7 +43,7 @@ export class PartidasService {
         partidas: this.apiFootball.getPartidas(c.idApiFootball, c.ano, true)
       }
     }
-    const campeonatosUsuario = await this.campeonatoService.findCampeonatosAtivosByUsuario(idUsuario);
+    const campeonatosUsuario = await this.campeonatoService.findCampeonatosAtivosComPartidasAoVivoByUsuario(idUsuario);
     const requests = campeonatosUsuario.map(c => this.apiFootball.getPartidas(c.idApiFootball, c.ano, true));
     const response = await Promise.all(requests);
     return response.map((r, index) => ({

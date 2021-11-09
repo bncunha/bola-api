@@ -85,13 +85,17 @@ export class CampeonatosService {
     return this.campeonatoRepository.findOne(id);
   }
 
-  async findCampeonatosAtivosByUsuario(idUsuario: number) {
+  async findCampeonatosAtivosComPartidasAoVivoByUsuario(idUsuario: number) {
     return await this.campeonatoRepository.createQueryBuilder('campeonato')
+      .leftJoin('campeonato.partidas', 'partida')
       .leftJoin('campeonato.boloes', 'b')
       .leftJoin('b.participantes', 'part')
       .leftJoinAndSelect('part.usuario', 'u')
       .where('u.id = :idUsuario', {idUsuario})
       .andWhere('campeonato.ano = :ano', {ano: new Date().getFullYear()})
+      .andWhere('partida.isFinalizado = :finalizado', {finalizado: false})
+      .andWhere('partida.data > :antesDuasHoras', {antesDuasHoras: DateUtils.subtract(new Date(), {hours: 2})})
+      .andWhere('partida.data < :aposDuasHoras', {aposDuasHoras: DateUtils.add(new Date(), {hours: 2})})
       .getMany();
   }
 }
