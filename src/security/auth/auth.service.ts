@@ -13,7 +13,7 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usuarioService.findByEmail(email, true);
     if (user && user.isAtivo && await Encrypt.compare(pass, user.senha)) {
-      console.log(user);
+      console.log('--Usuario Logado--', user);
       const { senha, ...result } = user;
       return result;
     }

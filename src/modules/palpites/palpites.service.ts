@@ -1,12 +1,13 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { Campeonato } from 'src/models/Campeonato';
 import { Palpite } from 'src/models/Palpite';
 import { Participacao } from 'src/models/Participacao';
 import { Partida } from 'src/models/Partida';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
-import { IsNull, Not, Repository, SimpleConsoleLogger } from 'typeorm';
+import { IsNull, LessThanOrEqual, Not, Repository, SimpleConsoleLogger } from 'typeorm';
 import { BoloesService } from '../boloes/boloes.service';
 import { PartidasService } from '../partidas/partidas.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
@@ -19,6 +20,7 @@ export class PalpitesService {
   constructor(
     @InjectRepository(Palpite) private palpiteRepository: Repository<Palpite>,
     @InjectRepository(Partida) private partidaRepository: Repository<Partida>,
+    @InjectRepository(Campeonato) private campeonatoRepository: Repository<Campeonato>,
     private usuarioService: UsuariosService,
     private bolaoService: BoloesService,
     private participacaoService: ParticipacoesService
@@ -47,7 +49,32 @@ export class PalpitesService {
       palpite.partida = partida;
       toSave.push(palpite);
     }
+    console.log(`-- Salvando Palpite (${usuario.nome}-${usuario.id}) --`, toSave);
     return this.palpiteRepository.save(toSave);
+  }
+
+  async pontuarUltimosXRodadas(x: number) {
+    const dataAtual = new Date();
+    const partidasAntigas = await this.partidaRepository.find({
+      where: {
+        data: LessThanOrEqual(dataAtual)
+      }, order: {
+        data: 'DESC'
+      }
+    });
+    const round = partidasAntigas[0]?.rodada;
+    console.log('- Rodada:', round);
+    if (round) {
+      console.log('- Atualizando Palpites, últimos rounds -', x);
+      const partidasAtualizar = partidasAntigas.filter(p => p.rodada <= round && p.rodada >= round - x);
+      console.log(partidasAtualizar);
+      await this.pontuarMany(partidasAtualizar.map(p => p.id));      
+    }
+  }
+
+  async pontuarMany(idPartidas: number[]) {
+    const requests = idPartidas.map(id => this.pontuarPalpites(id));
+    return Promise.all(requests);
   }
 
   async pontuarPalpites(idPartida: number) {
@@ -59,7 +86,7 @@ export class PalpitesService {
     const diferenca = Math.abs(resultadoMandante - resultadoVisitante);
 
     if (resultadoMandante == null || resultadoVisitante == null) {
-      throw new ConflictException('Partida não possui os resultados');
+      return new ConflictException('Partida não possui os resultados');
     }
 
     palpites.forEach(p => {
@@ -109,6 +136,36 @@ export class PalpitesService {
         data: 'ASC'
       }
     });
-    return DateUtils.compare(new Date(), partidas[0].data) <= 0;
+    return partidas[0] ? DateUtils.compare(new Date(), partidas[0].data) <= 0 : false;
+  }
+
+  async getPalpitesBonusParticipantes(idBolao: number) {
+    const bolao = await this.bolaoService.findOne(idBolao, {relations: ['campeonato']});
+    return this.participacaoService.findByBolao(bolao, {relations: ['usuario', 'palpiteCampeao', 'palpiteViceCampeao']});
+  };
+
+  async pontuarPalpiteBonus() {
+    const campeonatosFinalizados = await this.campeonatoRepository.find({
+      where: {
+        campeao: Not(IsNull()),
+        viceCampeao: Not(IsNull())
+      },
+    });
+    const boloes = await this.bolaoService.findByCampeonato(campeonatosFinalizados);
+    if (campeonatosFinalizados?.length && boloes?.length) {
+      const participacoes = await this.participacaoService.findByBolao(boloes, {relations: ['palpiteCampeao', 'palpiteViceCampeao', 'bolao', 'bolao.campeonato', 'bolao.campeonato.campeao', 'bolao.campeonato.viceCampeao']});
+      participacoes.forEach(p => {
+        let acertouCampeao = 0;
+        let acertouVice = 0;
+        if (p.palpiteCampeao) {
+          acertouCampeao = p.palpiteCampeao.id == p.bolao.campeonato.campeao.id ? 50 : 0;          
+        }
+        if (p.palpiteViceCampeao) {
+          acertouVice = p.palpiteViceCampeao.id == p.bolao.campeonato.viceCampeao.id ? 30 : 0;
+        }
+        p.pontosBonus = acertouCampeao + acertouVice;        
+      });
+      await this.participacaoService.saveMany(participacoes);
+    }
   }
 }

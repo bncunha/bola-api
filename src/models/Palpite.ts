@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { Participacao } from "./Participacao";
 import { Partida } from "./Partida";
 
@@ -33,5 +33,11 @@ export class Palpite {
   @ManyToOne(() => Participacao, p => p.palpites)
   participacao: Participacao;
 
-  totalPontos: number;
+  @CreateDateColumn()
+  dtCriacao: Date;
+
+  @UpdateDateColumn()
+  dtAtualizacao: Date;
+
+
 }

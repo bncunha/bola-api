@@ -1,0 +1,67 @@
+{
+    "campeonato": "Campeonato Brasileiro 2021",
+    "dataInicio": "05/29/2021",
+    "dataFim": "12/05/2021",
+    "partidas": [
+        {
+            "data": "07/24/2021 20:00",
+            "mandante": "Grêmio",
+            "visitante": "América-MG",
+            "rodada": 13
+        },
+        {
+            "data": "07/24/2021 22:00",
+            "mandante": "Palmeiras",
+            "visitante": "Fluminense",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 14:00",
+            "mandante": "Atlético-MG",
+            "visitante": "Bahia",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 19:00",
+            "mandante": "Fortaleza",
+            "visitante": "Bragantino",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 19:00",
+            "mandante": "Flamengo",
+            "visitante": "São Paulo",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 21:15",
+            "mandante": "Santos",
+            "visitante": "Atlético-GO",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 21:15",
+            "mandante": "Athletico-PR",
+            "visitante": "Internacional",
+            "rodada": 13
+        },
+        {
+            "data": "07/25/2021 23:30",
+            "mandante": "Sport",
+            "visitante": "Ceará",
+            "rodada": 13
+        },
+        {
+            "data": "07/26/2021 21:00",
+            "mandante": "Juventude",
+            "visitante": "Chapecoense",
+            "rodada": 13
+        },
+        {
+            "data": "07/26/2021 23:00",
+            "mandante": "Cuiabá Esporte",
+            "visitante": "Corinthians",
+            "rodada": 13
+        }
+    ]
+  }

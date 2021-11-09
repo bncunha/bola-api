@@ -1,0 +1,67 @@
+{
+    "campeonato": "Campeonato Brasileiro 2021",
+    "dataInicio": "05/29/2021",
+    "dataFim": "12/05/2021",
+    "partidas": [
+        {
+            "data": "06/27/2021 14:00",
+            "mandante": "Juventude",
+            "visitante": "Flamengo",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 19:00",
+            "mandante": "Fluminense",
+            "visitante": "Corinthians",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:00",
+            "mandante": "Palmeiras",
+            "visitante": "Bahia",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:00",
+            "mandante": "Athletico-PR",
+            "visitante": "Chapecoense",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:00",
+            "mandante": "Grêmio",
+            "visitante": "Fortaleza",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:30",
+            "mandante": "Santos",
+            "visitante": "Atlético-MG",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:30",
+            "mandante": "América-MG",
+            "visitante": "Internacional",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:30",
+            "mandante": "Sport",
+            "visitante": "Cuiabá Esporte",
+            "rodada": 7
+        },
+        {
+            "data": "06/27/2021 23:30",
+            "mandante": "Ceará",
+            "visitante": "São Paulo",
+            "rodada": 7
+        },
+        {
+            "data": "06/28/2021 23:00",
+            "mandante": "Atlético-GO",
+            "visitante": "Bragantino",
+            "rodada": 7
+        }
+    ]
+  }

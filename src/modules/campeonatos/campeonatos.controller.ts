@@ -10,4 +10,9 @@ export class CampeonatosController {
   iniciarPartida(@Body() iniciarPartidaDto: CriarCampeonatoDto) {
     return this.campeonatosService.criarCampeonatoCompleto(iniciarPartidaDto);
   }
+
+  @Get('atualizar')
+  atualizarCampeonatos() {
+    return this.campeonatosService.atualizarCampeonato();
+  }
 }

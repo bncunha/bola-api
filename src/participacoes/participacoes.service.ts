@@ -1,9 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bolao } from 'src/models/Bolao';
+import { Campeonato } from 'src/models/Campeonato';
 import { Participacao } from 'src/models/Participacao';
 import { Usuario } from 'src/models/Usuario';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateParticipacoeDto } from './dto/create-participacoe.dto';
 import { UpdateParticipacoeDto } from './dto/update-participacoe.dto';
 
@@ -39,10 +40,10 @@ export class ParticipacoesService {
     return this.participacaoRepository.remove(await this.findByBolaoAndUsuario(bolao, usuario));
   }
 
-  findByBolao(bolao: Bolao, options?) {
+  findByBolao(bolao: Bolao | Bolao[], options?) {
     return this.participacaoRepository.find({
       where: {
-        bolao
+        bolao: Array.isArray(bolao) ? In(bolao.map(b => b.id)) : bolao.id
       },
       ...options
     })
@@ -66,7 +67,19 @@ export class ParticipacoesService {
     })
   }
 
+  findByCampeonato(campeonato: Campeonato[]) {
+    return this.participacaoRepository.find({
+      where: {
+        campeonato,
+      },
+    })
+  }
+
   save(participacao: Participacao) {
+    return this.participacaoRepository.save(participacao);
+  }
+
+  saveMany(participacao: Participacao[]) {
     return this.participacaoRepository.save(participacao);
   }
 

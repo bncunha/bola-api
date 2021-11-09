@@ -82,4 +82,9 @@ export class BoloesController {
     return this.boloesService.getPalpiteBonus(idBolao, req.user.userId);
   }
 
+  @Get('detalhes-partida/:idBolao/:idPartida')
+  getDetalhesPartida(@Param('idBolao') idBolao: number, @Param('idPartida') idPartida) {
+    return this.boloesService.getDetalhesPartida(idBolao, idPartida);
+  }
+
 }

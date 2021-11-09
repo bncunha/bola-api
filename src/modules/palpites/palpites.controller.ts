@@ -21,4 +21,9 @@ export class PalpitesController {
   getDataLimite(@Param('idBolao') idBolao: number) {
     return this.palpitesService.isPalpiteBonusDisponivel(idBolao);
   }
+
+  @Get(':idBolao')
+  getPalpitesParticipantes(@Param('idBolao') idBolao: number) {
+    return this.palpitesService.getPalpitesBonusParticipantes(idBolao);
+  }
 }

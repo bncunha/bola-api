@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Bolao } from "./Bolao";
 import { Partida } from "./Partida";
 import { Time } from "./Time";
 
@@ -21,6 +22,16 @@ export class Campeonato {
     nullable: false
   })
   dataFim: Date;
+  
+  @Column({
+    nullable: true
+  })
+  idApiFootball: number;
+
+  @Column({
+    nullable: true
+  })
+  ano: number;
 
   @ManyToOne(() => Time)
   campeao: Time;
@@ -30,4 +41,12 @@ export class Campeonato {
 
   @OneToMany(() => Partida, p => p.campeonato, {cascade: true})
   partidas: Partida[];
+
+  @OneToMany(() => Bolao, b => b.campeonato)
+  boloes: Bolao[];
+
+  atualizarVencedores(campeao: Time, vice: Time) {
+    this.campeao = campeao;
+    this.viceCampeao = vice;
+  }
 }

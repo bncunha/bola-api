@@ -7,9 +7,10 @@ import { Partida } from 'src/models/Partida';
 import { UsuariosModule } from '../usuarios/usuarios.module';
 import { BoloesModule } from '../boloes/boloes.module';
 import { ParticipacoesModule } from 'src/participacoes/participacoes.module';
+import { Campeonato } from 'src/models/Campeonato';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Palpite, Partida]), UsuariosModule, BoloesModule, ParticipacoesModule],
+  imports: [TypeOrmModule.forFeature([Palpite, Partida, Campeonato]), UsuariosModule, BoloesModule, ParticipacoesModule],
   controllers: [PalpitesController],
   providers: [PalpitesService],
   exports: [PalpitesService]

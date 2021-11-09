@@ -6,6 +6,10 @@ dist/*
 !/dist/v5
 !/dist/v6
 
+.env
+.env.staging
+.env.prod
+
 /tmp
 /out-tsc
 

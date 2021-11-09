@@ -1,5 +1,5 @@
 import { DateUtils } from "src/utils/date.util";
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Campeonato } from "./Campeonato";
 import { Participacao } from "./Participacao";
 import { Partida } from "./Partida";
@@ -30,9 +30,7 @@ export class Bolao {
   })
   senha: string;
 
-  @Column({
-    default: new Date()
-  })
+  @CreateDateColumn()
   dataInicio: Date;
 
   @Column({

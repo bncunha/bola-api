@@ -34,5 +34,10 @@ export class Participacao {
   @ManyToOne(() => Time)
   palpiteViceCampeao: Time;
 
+  @Column({
+    default: 0
+  })
+  pontosBonus: number;
+
   totalPontos: number;
 }
