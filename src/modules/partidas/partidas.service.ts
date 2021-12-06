@@ -5,8 +5,8 @@ import { Partida } from 'src/models/Partida';
 import { Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
 import { PalpitesService } from '../palpites/palpites.service';
+import { UsuariosService } from '../usuarios/usuarios.service';
 import { AtualizarResultadoPartidaDto } from './dto/atualizar-resultado-partida';
-import { GetPartidasFilter } from './dto/get-partidas-filter.dto';
 
 @Injectable()
 export class PartidasService {
@@ -50,14 +50,5 @@ export class PartidasService {
       campeonato: campeonatosUsuario[index],
       partidas: r
     }))
-  }
-
-  async possuiPartidaAoVivo(idUsuario: number) {
-    const response = await this.campeonatoService.findCampeonatosAtivosComPartidasAoVivoByUsuario(idUsuario);
-    return response.length > 0;
-  }
-
-  async getPartidasByUsuarioAndFilters(idUsuario: number, filtros: GetPartidasFilter) {
-    return await this.campeonatoService.findCampeonatosByUsuarioAndFilters(idUsuario, filtros);
   }
 }

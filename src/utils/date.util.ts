@@ -1,4 +1,4 @@
-import { compareAsc, sub, add, differenceInDays, format, setHours, setMinutes, setSeconds } from 'date-fns';
+import { compareAsc, sub, add, differenceInDays, format } from 'date-fns';
 import ja from 'date-fns/locale/ja/index';
 
 export class DateUtils {
@@ -25,19 +25,5 @@ export class DateUtils {
 
   static format(date: Date, fomat: string) {
     return format(date, fomat);
-  }
-
-  static setTime(date: Date, time: {hours, minutes, seconds}) {
-    let newDate: Date = date;
-    if (time.hours) {
-     newDate = setHours(newDate, time.hours);
-    }
-    if (time.minutes) {
-      newDate = setMinutes(newDate, time.minutes);
-    }
-    if (time.seconds) {
-      newDate = setSeconds(newDate, time.seconds);
-    }
-    return newDate;
   }
 }
