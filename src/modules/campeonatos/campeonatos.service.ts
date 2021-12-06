@@ -7,7 +7,7 @@ import { DateUtils } from '../../utils/date.util';
 import { Partida } from 'src/models/Partida';
 import { Time } from 'src/models/Time';
 import { ApiFootball } from 'src/gateway/api-football/api-football';
-import { Usuario } from 'src/models/Usuario';
+import { GetPartidasFilter } from '../partidas/dto/get-partidas-filter.dto';
 
 @Injectable()
 export class CampeonatosService {
@@ -97,6 +97,22 @@ export class CampeonatosService {
       .andWhere('partida.data > :antesDuasHoras', {antesDuasHoras: DateUtils.subtract(new Date(), {hours: 2})})
       .andWhere('partida.data < :aposDuasHoras', {aposDuasHoras: DateUtils.add(new Date(), {hours: 2})})
       .getMany();
+  }
+  
+  async findCampeonatosByUsuarioAndFilters(idUsuario: number, filtros: GetPartidasFilter) {
+    const builder = this.campeonatoRepository.createQueryBuilder('campeonato')
+      .leftJoinAndSelect('campeonato.partidas', 'partida')
+      .leftJoin('campeonato.boloes', 'b')
+      .leftJoin('b.participantes', 'part')
+      .leftJoinAndSelect('part.usuario', 'u')
+      .where('u.id = :idUsuario', {idUsuario})
+      .andWhere('campeonato.ano = :ano', {ano: new Date().getFullYear()})
+  
+    if (filtros.periodo || 'SEMANAL') {
+      builder.andWhere('partida.data >= :hoje', {hoje: DateUtils.setTime(new Date(), {hours: 0, minutes: 0, seconds: 0})} )
+      builder.andWhere('partida.data <= :proximaSemana', {proximaSemana: DateUtils.add(DateUtils.setTime(new Date(), {hours: 0, minutes: 0, seconds: 0}), {weeks: 1})} )
+    }
+    return builder.getMany();
   }
 }
 
