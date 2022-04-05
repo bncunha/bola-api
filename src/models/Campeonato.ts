@@ -50,12 +50,6 @@ export class Campeonato {
   @OneToMany(() => Bolao, b => b.campeonato)
   boloes: Bolao[];
 
-  @CreateDateColumn({ type: 'timestamp' })
-  dtCriacao: any;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  dtAtualizacao: any;
-
   atualizarVencedores(campeao: Time, vice: Time) {
     this.campeao = campeao;
     this.viceCampeao = vice;
