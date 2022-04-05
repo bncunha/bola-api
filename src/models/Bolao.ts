@@ -11,7 +11,6 @@ export class Bolao {
 
   @Column({
     nullable: false,
-    unique: true
   })
   nome: string;
 
@@ -26,7 +25,8 @@ export class Bolao {
   isPublico: boolean;
 
   @Column({
-    nullable: true
+    nullable: true,
+    select: false
   })
   senha: string;
 
@@ -41,7 +41,7 @@ export class Bolao {
   @OneToMany(() => Participacao, p => p.bolao, {cascade: ['insert']})
   participantes: Participacao[];
 
-  @ManyToOne(() => Campeonato)
+  @ManyToOne(() => Campeonato, {nullable: false, cascade: ['insert']})
   campeonato: Campeonato;
 
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { ApiFootball } from 'src/gateway/api-football/api-football';
@@ -17,6 +17,7 @@ import { TimesService } from '../times/times.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
 import { CreatePalpiteBonusDto } from './dto/create-palpite-bonus.dto';
+import { ParticiparBolaoDto } from './dto/participar-bolao-dto';
 import { UpdateBolaoDto } from './dto/update-bolao.dto';
 
 @Injectable()
@@ -105,9 +106,22 @@ export class BoloesService {
     return `This action removes a #${id} boloe`;
   }
 
-  async adicionarParticipante(idBolao: number, idUsuario: number) {
-    const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
+  async adicionarParticipante(idBolao: number, idUsuario: number, participarBolaoDto: ParticiparBolaoDto) {
+    const bolao = await this.bolaoRepository.findOneOrFail(idBolao, {select: ['id',
+      'nome',
+      'maximoParticipantes',
+      'isPublico',
+      'senha',
+      'dataInicio',
+      'dataFim'
+    ]});
     const usuario = await this.usuarioService.findOne(idUsuario);
+    if (!bolao.isPublico) {
+      const senhaCorreta = await Encrypt.compare(participarBolaoDto.senha, bolao.senha);
+      if (!senhaCorreta) {
+        throw new BadRequestException("Senha incorreta!")
+      }
+    }
     return this.participacaoService.participarBolao(bolao, usuario);
   }
 
