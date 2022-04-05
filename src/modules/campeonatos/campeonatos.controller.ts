@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Request } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Request, Query } from '@nestjs/common';
 import { CampeonatosService } from './campeonatos.service';
 import { CriarCampeonatoDto } from './dto/criar-campeonato.dto';
 
@@ -11,8 +11,13 @@ export class CampeonatosController {
     return this.campeonatosService.criarCampeonatoCompleto(iniciarPartidaDto);
   }
 
-  @Get('atualizar')
-  atualizarCampeonatos() {
-    return this.campeonatosService.atualizarCampeonato();
+  // @Get('atualizar')
+  // atualizarCampeonatos() {
+  //   return this.campeonatosService.atualizarCampeonato();
+  // }
+
+  @Get('source/ativos/:pais')
+  getCampeonatosAtivos(@Param('pais') pais: string) {
+    return this.campeonatosService.getCampeonatosAtivosPorPais(pais);
   }
 }

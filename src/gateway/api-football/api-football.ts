@@ -18,15 +18,23 @@ export class ApiFootball {
 
   constructor(private httpService: HttpService) {}
 
-  async getCampeonatoAtivo() {
+  async getCampeonatoById(id: number) {
     const params = {
-      country: 'Brazil',
-      name: 'Serie A',
-      season: 2021,
+      id
     }
     const response = await this.httpService.get<ApiFootballResponse<ApiFootballLeagueResponse>>(this.endpoint + '/leagues', {params, headers: this.headers}).toPromise();
     const parser = new ApiFootballLeagueParse();
-    return parser.parse(response.data.response[0]);
+    return response.data.response.map(r => parser.parse(r));
+  }
+
+  async getCampeonatoAtivoByCountryAndSeason(country: string, season: number) {
+    const params = {
+      country,
+      season,
+    }
+    const response = await this.httpService.get<ApiFootballResponse<ApiFootballLeagueResponse>>(this.endpoint + '/leagues', {params, headers: this.headers}).toPromise();
+    const parser = new ApiFootballLeagueParse();
+    return response.data.response.map(r => parser.parse(r));
   }
 
   async getClassificacao(idLeague: number, temporada: number) {
@@ -49,7 +57,7 @@ export class ApiFootball {
     }
     const response = await this.httpService.get<ApiFootballResponse<ApiFootballFixtureResponse[]>>(this.endpoint + 'fixtures', {params, headers: this.headers}).toPromise();
     const parser = new ApiFootballFixtureParse();
-    return parser.parse(response.data.response);
+    return parser.parse(response.data.response as any);
   }
 
 }

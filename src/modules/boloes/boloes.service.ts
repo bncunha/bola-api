@@ -1,6 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { ApiFootball } from 'src/gateway/api-football/api-football';
 import { Bolao } from 'src/models/Bolao';
 import { Campeonato } from 'src/models/Campeonato';
 import { Palpite } from 'src/models/Palpite';
@@ -10,12 +11,13 @@ import { Usuario } from 'src/models/Usuario';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
 import { Encrypt } from 'src/utils/encrypt.util';
-import { Brackets, FindOneOptions, In, IsNull, LessThan, Repository } from 'typeorm';
+import { Brackets, FindOneOptions, getConnection, In, IsNull, LessThan, Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
 import { TimesService } from '../times/times.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
 import { CreatePalpiteBonusDto } from './dto/create-palpite-bonus.dto';
+import { ParticiparBolaoDto } from './dto/participar-bolao-dto';
 import { UpdateBolaoDto } from './dto/update-bolao.dto';
 
 @Injectable()
@@ -33,15 +35,19 @@ export class BoloesService {
 
   async create(createBoloeDto: CreateBolaoDto, usuario: number) {
     const bolao = plainToClass(Bolao, createBoloeDto);
-    const campeonato = await this.campeonatoService.findByNome('Campeonato Brasileiro 2021');
-
+    const campeonato = await this.campeonatoService.getCampeonatoByIdApiFootball(createBoloeDto.campeonatoId);
     const user = await this.usuarioService.findOne(usuario);
     if (bolao.senha) {
       bolao.senha = await this.gerarSenhaBolao(bolao.senha);
     }
+    bolao.isPublico = !createBoloeDto.isPrivado;
     bolao.campeonato = campeonato;
     bolao.dataInicio = new Date();
     bolao.participantes = [await this.participacaoService.createParticipacaoByUsuario(user, true)];
+    delete bolao['campeonatoId']
+    if (!bolao.isPublico && !bolao.senha) {
+      throw new ConflictException("Senha é obrigatorio para bolao privado")
+    }
     return this.bolaoRepository.save(bolao);
   }
 
@@ -100,9 +106,22 @@ export class BoloesService {
     return `This action removes a #${id} boloe`;
   }
 
-  async adicionarParticipante(idBolao: number, idUsuario: number) {
-    const bolao = await this.bolaoRepository.findOneOrFail(idBolao);
+  async adicionarParticipante(idBolao: number, idUsuario: number, participarBolaoDto: ParticiparBolaoDto) {
+    const bolao = await this.bolaoRepository.findOneOrFail(idBolao, {select: ['id',
+      'nome',
+      'maximoParticipantes',
+      'isPublico',
+      'senha',
+      'dataInicio',
+      'dataFim'
+    ]});
     const usuario = await this.usuarioService.findOne(idUsuario);
+    if (!bolao.isPublico) {
+      const senhaCorreta = await Encrypt.compare(participarBolaoDto.senha, bolao.senha);
+      if (!senhaCorreta) {
+        throw new BadRequestException("Senha incorreta!")
+      }
+    }
     return this.participacaoService.participarBolao(bolao, usuario);
   }
 

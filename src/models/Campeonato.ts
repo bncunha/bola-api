@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Bolao } from "./Bolao";
 import { Partida } from "./Partida";
 import { Time } from "./Time";
@@ -33,6 +33,11 @@ export class Campeonato {
   })
   ano: number;
 
+  @Column({
+    nullable: true
+  })
+  imagem: string;
+
   @ManyToOne(() => Time)
   campeao: Time;
 
@@ -44,6 +49,12 @@ export class Campeonato {
 
   @OneToMany(() => Bolao, b => b.campeonato)
   boloes: Bolao[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  dtCriacao: any;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  dtAtualizacao: any;
 
   atualizarVencedores(campeao: Time, vice: Time) {
     this.campeao = campeao;

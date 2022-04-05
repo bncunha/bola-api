@@ -4,6 +4,7 @@ import { Usuario } from 'src/models/Usuario';
 import { BoloesService } from './boloes.service';
 import { CreateBolaoDto } from './dto/create-bolao.dto';
 import { CreatePalpiteBonusDto } from './dto/create-palpite-bonus.dto';
+import { ParticiparBolaoDto } from './dto/participar-bolao-dto';
 import { UpdateBolaoDto } from './dto/update-bolao.dto';
 
 @Controller('boloes')
@@ -41,9 +42,9 @@ export class BoloesController {
   }
 
   @Post(':id/participar')
-  participarBolao(@Param('id') id: number, @Request() req) {
+  participarBolao(@Param('id') id: number, @Request() req, @Body() participarBolaoDto: ParticiparBolaoDto) {
     const user = req.user;
-    return this.boloesService.adicionarParticipante(id, user.userId);
+    return this.boloesService.adicionarParticipante(id, user.userId, participarBolaoDto);
   }
 
   @Post(':id/sair')
