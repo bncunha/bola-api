@@ -4,5 +4,5 @@ export class ApiFootballResponse<T> {
   errors: any[];
   results: number;
   paging: { current: number, total: number };
-  response: T;
+  response: T[];
 }

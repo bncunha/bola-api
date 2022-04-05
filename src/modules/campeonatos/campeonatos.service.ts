@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Campeonato } from 'src/models/Campeonato';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CriarCampeonatoDto } from './dto/criar-campeonato.dto';
 import { DateUtils } from '../../utils/date.util';
 import { Partida } from 'src/models/Partida';
@@ -46,15 +46,27 @@ export class CampeonatosService {
     return this.campeonatoRepository.findOne({where: {nome}})
   }
 
-  async atualizarCampeonato() {
-    console.log('- Buscando Campeonato Ativo')
-    const campeonato = await this.apiFootball.getCampeonatoAtivo();
-    console.log('- Buscando Partidas')
+  async atualizarLoteCampeonatos() {
+    const campeonatos = await this.apiFootball.getCampeonatoAtivoByCountryAndSeason('Brazil', new Date().getFullYear());
+    const campeonatosCadastrados = await this.campeonatoRepository.find({
+      where: {
+        idApiFootball: In(campeonatos.map(c => c.idApiFootball))
+      }
+    })
+    for (let campeonato of campeonatosCadastrados) {
+      try {
+        await this.atualizarCampeonato(campeonato);
+      } catch(err) {
+        console.log("Erro ao atualizar camepoanto!", err)
+      }
+    }
+  }
+
+  private async atualizarCampeonato(campeonato: Campeonato) {
+    console.log('- Buscando Partidas - Campeonato: ' + campeonato.nome)
     const partidasApi = await this.apiFootball.getPartidas(campeonato.idApiFootball, new Date().getFullYear());
-    console.log('- Buscando Campeonato Cadastrado')
-    const campeonatoCadastrato = await this.campeonatoRepository.findOneOrFail({where: {idApiFootball: campeonato.idApiFootball}})
     console.log('- Buscando Partidas Cadastradas')
-    const partidasCadastradas = await this.partidaRepository.find({relations: ['visitante', 'mandante']});
+    const partidasCadastradas = await this.partidaRepository.find({relations: ['visitante', 'mandante'], where: {campeonato}});
     console.log('- Buscando Times Cadastradas')
     const times = await this.timeRepository.find();
     if (campeonato.dataFim.getTime() < new Date().getTime()) {
@@ -67,11 +79,17 @@ export class CampeonatosService {
     }
     for (let p of partidasApi) {
       const idPartidaCadastrada = partidasCadastradas.find(pCadastrado => pCadastrado.isEqual(p));
-      const idMandante = times.find(t => t.nome.indexOf(p.mandante.nome) >= 0);
-      const idVisitante = times.find(t => t.nome.indexOf(p.visitante.nome) >= 0);
-      p.campeonato = campeonatoCadastrato;
-      p.mandante.id = idMandante.id;
-      p.visitante.id = idVisitante.id;
+      let mandante = times.find(t => t.nome.indexOf(p.mandante.nome) >= 0);
+      let visitante = times.find(t => t.nome.indexOf(p.visitante.nome) >= 0);
+      if (!mandante) {
+        mandante = await this.timeRepository.save(p.mandante);
+      }
+      if (!visitante) {
+        visitante = await this.timeRepository.save(p.visitante);
+      }
+      p.campeonato = campeonato;
+      p.mandante = mandante;
+      p.visitante = visitante;
       if (idPartidaCadastrada) {
         p.id = idPartidaCadastrada.id;
       }
@@ -113,6 +131,20 @@ export class CampeonatosService {
       builder.andWhere('partida.data <= :proximaSemana', {proximaSemana: DateUtils.add(DateUtils.setTime(new Date(), {hours: 0, minutes: 0, seconds: 0}), {weeks: 1})} )
     }
     return builder.getMany();
+  }
+
+  getCampeonatosAtivosPorPais(pais: string) {
+    return this.apiFootball.getCampeonatoAtivoByCountryAndSeason(pais, new Date().getFullYear());
+  }
+
+  async getCampeonatoByIdApiFootball(id: number) {
+    const campeonatoLocal = await this.campeonatoRepository.findOne({
+      where: { idApiFootball: id }
+    })
+    if (campeonatoLocal) {
+      return campeonatoLocal;
+    }
+    return (await this.apiFootball.getCampeonatoById(id))[0];
   }
 }
 

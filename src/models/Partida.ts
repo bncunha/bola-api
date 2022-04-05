@@ -40,10 +40,10 @@ export class Partida {
   @OneToMany(() => Palpite, p => p.partida)
   palpites: Palpite[];
 
-  @ManyToOne(() => Time)
+  @ManyToOne(() => Time, {cascade: ['insert']})
   mandante: Time;
 
-  @ManyToOne(() => Time)
+  @ManyToOne(() => Time, {cascade: ['insert']})
   visitante: Time;
 
   @ManyToOne(() => Campeonato, c => c.partidas)

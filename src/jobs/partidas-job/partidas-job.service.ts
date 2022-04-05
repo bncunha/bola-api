@@ -14,7 +14,7 @@ export class PartidasJobService {
   @Cron('0 10 0 * * *')
   async atualizarPartidas() {
     console.log('--- Iniciando Job Atualizar Partidas ---');
-    await this.campeonatoService.atualizarCampeonato();
+    await this.campeonatoService.atualizarLoteCampeonatos();
     console.log('--- Fim Job Atualizar Partidas ---');
   } 
 
