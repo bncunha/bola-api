@@ -4,10 +4,13 @@ export class CreateBolaoDto {
   @IsNotEmpty({message: 'Nome é obrigatório!'})
   nome: string;
 
-  @Min(2, {message: 'Máximo de participantes de ser 2 ou mais.'})
+  @Min(2, {message: 'Máximo de participantes deve ser 2 ou mais.'})
   maximoParticipantes: number;
 
-  isPublico: boolean;
+  isPrivado: boolean;
+
+  @IsNotEmpty({ message: 'Campeonato é obrigatório!'})
+  campeonatoId: number;
 
   senha: string;
 }

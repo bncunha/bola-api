@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { ApiFootball } from 'src/gateway/api-football/api-football';
 import { Bolao } from 'src/models/Bolao';
 import { Campeonato } from 'src/models/Campeonato';
 import { Palpite } from 'src/models/Palpite';
@@ -10,7 +11,7 @@ import { Usuario } from 'src/models/Usuario';
 import { ParticipacoesService } from 'src/participacoes/participacoes.service';
 import { DateUtils } from 'src/utils/date.util';
 import { Encrypt } from 'src/utils/encrypt.util';
-import { Brackets, FindOneOptions, In, IsNull, LessThan, Repository } from 'typeorm';
+import { Brackets, FindOneOptions, getConnection, In, IsNull, LessThan, Repository } from 'typeorm';
 import { CampeonatosService } from '../campeonatos/campeonatos.service';
 import { TimesService } from '../times/times.service';
 import { UsuariosService } from '../usuarios/usuarios.service';
@@ -33,15 +34,19 @@ export class BoloesService {
 
   async create(createBoloeDto: CreateBolaoDto, usuario: number) {
     const bolao = plainToClass(Bolao, createBoloeDto);
-    const campeonato = await this.campeonatoService.findByNome('Campeonato Brasileiro 2021');
-
+    const campeonato = await this.campeonatoService.getCampeonatoByIdApiFootball(createBoloeDto.campeonatoId);
     const user = await this.usuarioService.findOne(usuario);
     if (bolao.senha) {
       bolao.senha = await this.gerarSenhaBolao(bolao.senha);
     }
+    bolao.isPublico = !createBoloeDto.isPrivado;
     bolao.campeonato = campeonato;
     bolao.dataInicio = new Date();
     bolao.participantes = [await this.participacaoService.createParticipacaoByUsuario(user, true)];
+    delete bolao['campeonatoId']
+    if (!bolao.isPublico && !bolao.senha) {
+      throw new ConflictException("Senha é obrigatorio para bolao privado")
+    }
     return this.bolaoRepository.save(bolao);
   }
 
