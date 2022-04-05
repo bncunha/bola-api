@@ -50,7 +50,8 @@ export class CampeonatosService {
     const campeonatos = await this.apiFootball.getCampeonatoAtivoByCountryAndSeason('Brazil', new Date().getFullYear());
     const campeonatosCadastrados = await this.campeonatoRepository.find({
       where: {
-        idApiFootball: In(campeonatos.map(c => c.idApiFootball))
+        idApiFootball: In(campeonatos.map(c => c.idApiFootball)),
+        ano: new Date().getFullYear(),
       }
     })
     for (let campeonato of campeonatosCadastrados) {
@@ -137,9 +138,9 @@ export class CampeonatosService {
     return this.apiFootball.getCampeonatoAtivoByCountryAndSeason(pais, new Date().getFullYear());
   }
 
-  async getCampeonatoByIdApiFootball(id: number) {
+  async getCampeonatoByIdApiFootballAndSeason(id: number, season: number) {
     const campeonatoLocal = await this.campeonatoRepository.findOne({
-      where: { idApiFootball: id }
+      where: { idApiFootball: id, ano: season }
     })
     if (campeonatoLocal) {
       return campeonatoLocal;

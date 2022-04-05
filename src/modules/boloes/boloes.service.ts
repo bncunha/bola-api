@@ -35,7 +35,7 @@ export class BoloesService {
 
   async create(createBoloeDto: CreateBolaoDto, usuario: number) {
     const bolao = plainToClass(Bolao, createBoloeDto);
-    const campeonato = await this.campeonatoService.getCampeonatoByIdApiFootball(createBoloeDto.campeonatoId);
+    const campeonato = await this.campeonatoService.getCampeonatoByIdApiFootballAndSeason(createBoloeDto.campeonatoId, new Date().getFullYear());
     const user = await this.usuarioService.findOne(usuario);
     if (bolao.senha) {
       bolao.senha = await this.gerarSenhaBolao(bolao.senha);

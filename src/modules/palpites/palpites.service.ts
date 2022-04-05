@@ -56,8 +56,13 @@ export class PalpitesService {
   async pontuarUltimosXRodadas(x: number) {
     const dataAtual = new Date();
     const partidasAntigas = await this.partidaRepository.find({
+      relations: ['campeonato'],
       where: {
-        data: LessThanOrEqual(dataAtual)
+        data: LessThanOrEqual(dataAtual),
+        campeonato: {
+          campeao: IsNull(),
+          viceCampeao: IsNull(),
+        }
       }, order: {
         data: 'DESC'
       }
